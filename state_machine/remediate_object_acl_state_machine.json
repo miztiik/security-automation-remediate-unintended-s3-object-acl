@@ -1,0 +1,71 @@
+{
+  "StartAt": "isObjectPrivate?",
+  "States": {
+    "isObjectPrivate?": {
+      "Next": "Is Object Private?",
+      "OutputPath": "$",
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:111122223333:function:is_object_private_fn",
+      "ResultPath": "$"
+    },
+    "Is Object Private?": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.is_private",
+          "BooleanEquals": true,
+          "Next": "Object Acl Compliant"
+        },
+        {
+          "Variable": "$.is_private",
+          "BooleanEquals": false,
+          "Next": "RemediateObjectAcl"
+        }
+      ],
+      "Default": "Acl Remediation Failed"
+    },
+    "Acl Remediation Failed": {
+      "Type": "Fail",
+      "Error": "Check Logs",
+      "Cause": "Acl Remediation Failed"
+    },
+    "Notify InfoSecOps": {
+      "Next": "Acl Remediation Failed",
+      "Parameters": {
+        "TopicArn": "arn:aws:sns:us-east-1:111122223333:InfoSecOpsTopic",
+        "Message.$": "$.sns_message",
+        "Subject": "Object Acl Remediation"
+      },
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish"
+    },
+    "Object Remediation Complete?": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.status",
+          "BooleanEquals": true,
+          "Next": "Object Acl Compliant"
+        },
+        {
+          "Variable": "$.status",
+          "BooleanEquals": false,
+          "Next": "Notify InfoSecOps"
+        }
+      ],
+      "Default": "Acl Remediation Failed"
+    },
+    "RemediateObjectAcl": {
+      "Next": "Object Remediation Complete?",
+      "OutputPath": "$",
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:111122223333:function:remediate_object_acl_fn",
+      "ResultPath": "$"
+    },
+    "Object Acl Compliant": {
+      "Type": "Succeed",
+      "Comment": "Object Acl is Compliant"
+    }
+  },
+  "TimeoutSeconds": 180
+}

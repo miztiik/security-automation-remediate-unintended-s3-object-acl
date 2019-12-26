@@ -1,0 +1,727 @@
+{
+  "Resources": {
+    "s3bucketFBFA637E": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Owner",
+            "Value": "Mystique"
+          },
+          {
+            "Key": "OwnerProfile",
+            "Value": "https://github.com/miztiik"
+          },
+          {
+            "Key": "ToKnowMore",
+            "Value": "https://youtube.com/c/valaxytechnologies"
+          },
+          {
+            "Key": "isMonitoredBucket",
+            "Value": "True"
+          }
+        ]
+      },
+      "UpdateReplacePolicy": "Retain",
+      "DeletionPolicy": "Retain",
+      "Metadata": {
+        "aws:cdk:path": "security-automation-remediate-unintended-s3-object-acl/s3bucket/Resource"
+      }
+    },
+    "s3DataEventTrailIdS31824FE76": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Owner",
+            "Value": "Mystique"
+          },
+          {
+            "Key": "OwnerProfile",
+            "Value": "https://github.com/miztiik"
+          },
+          {
+            "Key": "ToKnowMore",
+            "Value": "https://youtube.com/c/valaxytechnologies"
+          }
+        ]
+      },
+      "UpdateReplacePolicy": "Retain",
+      "DeletionPolicy": "Retain",
+      "Metadata": {
+        "aws:cdk:path": "security-automation-remediate-unintended-s3-object-acl/s3DataEventTrailId/S3/Resource"
+      }
+    },
+    "s3DataEventTrailIdS3Policy031BF760": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "s3DataEventTrailIdS31824FE76"
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:GetBucketAcl",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "cloudtrail.amazonaws.com"
+              },
+              "Resource": {
+                "Fn::GetAtt": [
+                  "s3DataEventTrailIdS31824FE76",
+                  "Arn"
+                ]
+              }
+            },
+            {
+              "Action": "s3:PutObject",
+              "Condition": {
+                "StringEquals": {
+                  "s3:x-amz-acl": "bucket-owner-full-control"
+                }
+              },
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "cloudtrail.amazonaws.com"
+              },
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    {
+                      "Fn::GetAtt": [
+                        "s3DataEventTrailIdS31824FE76",
+                        "Arn"
+                      ]
+                    },
+                    "/AWSLogs/",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    "/*"
+                  ]
+                ]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "security-automation-remediate-unintended-s3-object-acl/s3DataEventTrailId/S3/Policy/Resource"
+      }
+    },
+    "s3DataEventTrailId328979E4": {
+      "Type": "AWS::CloudTrail::Trail",
+      "Properties": {
+        "IsLogging": true,
+        "S3BucketName": {
+          "Ref": "s3DataEventTrailIdS31824FE76"
+        },
+        "EnableLogFileValidation": true,
+        "EventSelectors": [
+          {
+            "DataResources": [
+              {
+                "Type": "AWS::S3::Object",
+                "Values": [
+                  {
+                    "Fn::Join": [
+                      "",
+                      [
+                        {
+                          "Fn::GetAtt": [
+                            "s3bucketFBFA637E",
+                            "Arn"
+                          ]
+                        },
+                        "/"
+                      ]
+                    ]
+                  }
+                ]
+              }
+            ],
+            "IncludeManagementEvents": true,
+            "ReadWriteType": "All"
+          }
+        ],
+        "IncludeGlobalServiceEvents": false,
+        "IsMultiRegionTrail": false,
+        "Tags": [
+          {
+            "Key": "Owner",
+            "Value": "Mystique"
+          },
+          {
+            "Key": "OwnerProfile",
+            "Value": "https://github.com/miztiik"
+          },
+          {
+            "Key": "ToKnowMore",
+            "Value": "https://youtube.com/c/valaxytechnologies"
+          }
+        ]
+      },
+      "DependsOn": [
+        "s3DataEventTrailIdS3Policy031BF760"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "security-automation-remediate-unintended-s3-object-acl/s3DataEventTrailId/Resource"
+      }
+    },
+    "isObjPrivateFnServiceRole5ED9D067": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+              ]
+            ]
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "Owner",
+            "Value": "Mystique"
+          },
+          {
+            "Key": "OwnerProfile",
+            "Value": "https://github.com/miztiik"
+          },
+          {
+            "Key": "ToKnowMore",
+            "Value": "https://youtube.com/c/valaxytechnologies"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "security-automation-remediate-unintended-s3-object-acl/isObjPrivateFn/ServiceRole/Resource"
+      }
+    },
+    "isObjPrivateFnServiceRoleDefaultPolicy62DE98F2": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:GetObjectAcl",
+              "Effect": "Allow",
+              "Resource": "arn:aws:s3:::*"
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "isObjPrivateFnServiceRoleDefaultPolicy62DE98F2",
+        "Roles": [
+          {
+            "Ref": "isObjPrivateFnServiceRole5ED9D067"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "security-automation-remediate-unintended-s3-object-acl/isObjPrivateFn/ServiceRole/DefaultPolicy/Resource"
+      }
+    },
+    "isObjPrivateFn98D60052": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "ZipFile": "# -*- coding: utf-8 -*-\n\"\"\"\n.. module: is_object_private\n    :Actions: Check if object ACL is private\n    :copyright: (c) 2020 Mystique.,\n.. moduleauthor:: Mystique\n.. contactauthor:: miztiik@github issues\n\"\"\"\n\nimport json\nimport logging\n\nimport boto3\nfrom botocore.exceptions import ClientError\n\n__author__      = 'Mystique'\n__email__       = 'miztiik@github'\n__version__     = '0.0.1'\n__status__      = 'production'\n\n\nclass global_args:\n    \"\"\"\n    Global statics\n    \"\"\"\n    OWNER                       = 'Mystique'\n    ENVIRONMENT                 = 'production'\n    MODULE_NAME                 = 'is_object_private'\n    LOG_LEVEL                   = logging.INFO\n\n\ndef set_logging(lv=global_args.LOG_LEVEL):\n    '''\n    Helper to enable logging\n    '''\n    logging.basicConfig(level=lv)\n    logger = logging.getLogger()\n    logger.setLevel(lv)\n    return logger\n\n# Initialize Logger\nlogger = set_logging(logging.INFO)\n\n############### END OF HELPERS ###############\n\ndef is_obj_private(bucket_name, obj_key):\n    \"\"\"\n    Check if the obj in a bucket is private\n    \"\"\"\n    # Default assume object is private\n    resp = {'status': False, 'is_private':True}\n    client = boto3.client('s3')\n    try:\n        obj_acl = client.get_object_acl(Bucket=bucket_name, Key=obj_key)\n\n        # Private object should have only one grant which is the owner of the object\n        if (len(obj_acl['Grants']) > 1):\n            resp['is_private'] = False\n\n        # If canonical owner & grantee ids do no match, conclude object is NOT private\n        owner_id = obj_acl['Owner']['ID']\n        grantee_id = obj_acl['Grants'][0]['Grantee']['ID']\n        if (owner_id != grantee_id):\n            resp['is_private'] = False\n        resp['status'] = True\n    except ClientError as e:\n        logger.error(\"Unable to get object:{obj_key} ACL\")\n        logger.error(f\"ERROR:{str(e)}\")\n        resp['error_message'] = str(e)\n    return resp\n\ndef lambda_handler(event, context):\n    \"\"\"\n    # For PutObjectAcl or PutObject Event, get the bucket and key event\n    \"\"\"\n    # logger.info(f'Event:{event}')\n    resp = {'status': False}\n    EVENT_TYPE = 'PutObjectAcl'\n    # Match Event Type\n    if 'detail' in event and 'eventName' in event.get('detail'):\n        if event.get('detail').get('eventName') == 'PutObjectAcl' or event.get('detail').get('eventName') == 'PutObject':\n            bucket_name = event.get('detail').get('requestParameters').get('bucketName')\n            obj_key = event['detail']['requestParameters']['key']\n            resp['bucket_name'] = bucket_name\n            resp['obj_key'] = obj_key\n\n    p_resp = is_obj_private(bucket_name, obj_key)\n    resp['is_private'] = p_resp.get('is_private')\n    \n    # we are unable to determine\n    if not p_resp.get('status'):\n        logger.error(f\"ERROR:{p_resp.get('error_message')}\")\n        resp['error_message'] = p_resp.get('error_message')\n    return resp\n\nif __name__ == '__main__':\n    lambda_handler({}, {})\n"
+        },
+        "Handler": "index.lambda_handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "isObjPrivateFnServiceRole5ED9D067",
+            "Arn"
+          ]
+        },
+        "Runtime": "python3.7",
+        "FunctionName": "is_object_private_fn",
+        "Tags": [
+          {
+            "Key": "Owner",
+            "Value": "Mystique"
+          },
+          {
+            "Key": "OwnerProfile",
+            "Value": "https://github.com/miztiik"
+          },
+          {
+            "Key": "ToKnowMore",
+            "Value": "https://youtube.com/c/valaxytechnologies"
+          }
+        ],
+        "Timeout": 3
+      },
+      "DependsOn": [
+        "isObjPrivateFnServiceRoleDefaultPolicy62DE98F2",
+        "isObjPrivateFnServiceRole5ED9D067"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "security-automation-remediate-unintended-s3-object-acl/isObjPrivateFn/Resource"
+      }
+    },
+    "remediateObjAclFnServiceRole05781C49": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+              ]
+            ]
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "Owner",
+            "Value": "Mystique"
+          },
+          {
+            "Key": "OwnerProfile",
+            "Value": "https://github.com/miztiik"
+          },
+          {
+            "Key": "ToKnowMore",
+            "Value": "https://youtube.com/c/valaxytechnologies"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "security-automation-remediate-unintended-s3-object-acl/remediateObjAclFn/ServiceRole/Resource"
+      }
+    },
+    "remediateObjAclFnServiceRoleDefaultPolicy3964D998": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:PutObjectAcl",
+              "Effect": "Allow",
+              "Resource": "arn:aws:s3:::*",
+              "Sid": "PutObjectAcl"
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "remediateObjAclFnServiceRoleDefaultPolicy3964D998",
+        "Roles": [
+          {
+            "Ref": "remediateObjAclFnServiceRole05781C49"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "security-automation-remediate-unintended-s3-object-acl/remediateObjAclFn/ServiceRole/DefaultPolicy/Resource"
+      }
+    },
+    "remediateObjAclFn81CEDECA": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "ZipFile": "# -*- coding: utf-8 -*-\n\"\"\"\n.. module: make_object_private\n    :Actions: if object ACL is public, makes them private\n    :copyright: (c) 2020 Mystique.,\n.. moduleauthor:: Mystique\n.. contactauthor:: miztiik@github issues\n\"\"\"\n\nimport json\nimport logging\n\nimport boto3\nfrom botocore.exceptions import ClientError\n\n__author__      = 'Mystique'\n__email__       = 'miztiik@github'\n__version__     = '0.0.1'\n__status__      = 'production'\n\n\nclass global_args:\n    \"\"\"\n    Global statics\n    \"\"\"\n    OWNER                       = 'Mystique'\n    ENVIRONMENT                 = 'production'\n    MODULE_NAME                 = 'make_object_private'\n    LOG_LEVEL                   = logging.INFO\n\n\ndef set_logging(lv=global_args.LOG_LEVEL):\n    '''\n    Helper to enable logging\n    '''\n    logging.basicConfig(level=lv)\n    logger = logging.getLogger()\n    logger.setLevel(lv)\n    return logger\n\n# Initialize Logger\nlogger = set_logging(logging.INFO)\n\n############### END OF HELPERS ###############\n\ndef make_obj_private(bucket_name, obj_key):\n    \"\"\"\n    Make object in bucket private\n    \"\"\"\n    resp = {'status': False}\n    client = boto3.client('s3')\n    try:\n        m_resp = client.put_object_acl(Bucket=bucket_name, Key=obj_key, ACL=\"private\")\n        logger.info(f\"Object:{obj_key} in Bucket:{bucket_name} is marked private\")\n        if m_resp['ResponseMetadata']['HTTPStatusCode'] == 200:\n            resp['status'] = True\n            resp['acl_remediated'] = True\n    except ClientError as e:\n        logger.error(\"Unable to mark object:{obj_key} private\")\n        logger.error(f\"ERROR:{str(e)}\")\n        resp['error_message'] = str(e)\n    return resp\n\n\ndef lambda_handler(event, context):\n    \"\"\"\n    # Helper to make object private\n    \"\"\"\n    logger.info(f'Event:{event}')\n    resp = {'status': False}\n    EVENT_TYPE = 'PutObjectAcl'\n    # Match Event Type\n    if 'obj_key' in event and 'bucket_name' in event:\n        if event['obj_key'] and event['bucket_name']:\n            resp['bucket_name'] = event.get('bucket_name')\n            resp['obj_key'] = event.get('obj_key')\n            m_resp = make_obj_private(event['bucket_name'], event['obj_key'])\n            resp['acl_remediated'] = m_resp.get('acl_remediated')\n            resp['status'] = True\n\n    # we are unable to determine, Prepare message for notification\n    if not m_resp.get('status'):\n        resp['sns_message'] = (\n            f\"Object:{resp['obj_key']} in bucket:{resp['bucket_name']} is private.\"\n            f\"Unable to remediate object Acl\"\n            f\"ERROR:{str(m_resp.get('error_message'))}\"\n            )\n        logger.error(f\"ERROR:{m_resp.get('error_message')}\")\n        resp['error_message'] = m_resp.get('error_message')\n    return resp\n\nif __name__ == '__main__':\n    lambda_handler({}, {})\n"
+        },
+        "Handler": "index.lambda_handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "remediateObjAclFnServiceRole05781C49",
+            "Arn"
+          ]
+        },
+        "Runtime": "python3.7",
+        "FunctionName": "remediate_object_acl_fn",
+        "Tags": [
+          {
+            "Key": "Owner",
+            "Value": "Mystique"
+          },
+          {
+            "Key": "OwnerProfile",
+            "Value": "https://github.com/miztiik"
+          },
+          {
+            "Key": "ToKnowMore",
+            "Value": "https://youtube.com/c/valaxytechnologies"
+          }
+        ],
+        "Timeout": 10
+      },
+      "DependsOn": [
+        "remediateObjAclFnServiceRoleDefaultPolicy3964D998",
+        "remediateObjAclFnServiceRole05781C49"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "security-automation-remediate-unintended-s3-object-acl/remediateObjAclFn/Resource"
+      }
+    },
+    "infoSecOpsTopicIdD21C4FE1": {
+      "Type": "AWS::SNS::Topic",
+      "Properties": {
+        "DisplayName": "InfoSecTopic",
+        "Tags": [
+          {
+            "Key": "Owner",
+            "Value": "Mystique"
+          },
+          {
+            "Key": "OwnerProfile",
+            "Value": "https://github.com/miztiik"
+          },
+          {
+            "Key": "ToKnowMore",
+            "Value": "https://youtube.com/c/valaxytechnologies"
+          }
+        ],
+        "TopicName": "InfoSecOpsTopic"
+      },
+      "Metadata": {
+        "aws:cdk:path": "security-automation-remediate-unintended-s3-object-acl/infoSecOpsTopicId/Resource"
+      }
+    },
+    "infoSecOpsTopicIdINFOSECOPSEMAILCOM6C4703F9": {
+      "Type": "AWS::SNS::Subscription",
+      "Properties": {
+        "Protocol": "email",
+        "TopicArn": {
+          "Ref": "infoSecOpsTopicIdD21C4FE1"
+        },
+        "Endpoint": "INFOSECOPS@EMAIL.COM"
+      },
+      "Metadata": {
+        "aws:cdk:path": "security-automation-remediate-unintended-s3-object-acl/infoSecOpsTopicId/INFOSECOPS@EMAIL.COM/Resource"
+      }
+    },
+    "stateMachineIdRole62656937": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "states.",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ".amazonaws.com"
+                    ]
+                  ]
+                }
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "Tags": [
+          {
+            "Key": "Owner",
+            "Value": "Mystique"
+          },
+          {
+            "Key": "OwnerProfile",
+            "Value": "https://github.com/miztiik"
+          },
+          {
+            "Key": "ToKnowMore",
+            "Value": "https://youtube.com/c/valaxytechnologies"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "security-automation-remediate-unintended-s3-object-acl/stateMachineId/Role/Resource"
+      }
+    },
+    "stateMachineIdRoleDefaultPolicy0EA5EE64": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "lambda:InvokeFunction",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "isObjPrivateFn98D60052",
+                  "Arn"
+                ]
+              }
+            },
+            {
+              "Action": "sns:Publish",
+              "Effect": "Allow",
+              "Resource": {
+                "Ref": "infoSecOpsTopicIdD21C4FE1"
+              }
+            },
+            {
+              "Action": "lambda:InvokeFunction",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "remediateObjAclFn81CEDECA",
+                  "Arn"
+                ]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "stateMachineIdRoleDefaultPolicy0EA5EE64",
+        "Roles": [
+          {
+            "Ref": "stateMachineIdRole62656937"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "security-automation-remediate-unintended-s3-object-acl/stateMachineId/Role/DefaultPolicy/Resource"
+      }
+    },
+    "stateMachineIdF7FDD688": {
+      "Type": "AWS::StepFunctions::StateMachine",
+      "Properties": {
+        "DefinitionString": {
+          "Fn::Join": [
+            "",
+            [
+              "{\"StartAt\":\"isObjectPrivate?\",\"States\":{\"isObjectPrivate?\":{\"Next\":\"Is Object Private?\",\"OutputPath\":\"$\",\"Type\":\"Task\",\"Resource\":\"",
+              {
+                "Fn::GetAtt": [
+                  "isObjPrivateFn98D60052",
+                  "Arn"
+                ]
+              },
+              "\",\"ResultPath\":\"$\"},\"Is Object Private?\":{\"Type\":\"Choice\",\"Choices\":[{\"Variable\":\"$.is_private\",\"BooleanEquals\":true,\"Next\":\"Object Acl Compliant\"},{\"Variable\":\"$.is_private\",\"BooleanEquals\":false,\"Next\":\"RemediateObjectAcl\"}],\"Default\":\"Acl Remediation Failed\"},\"Acl Remediation Failed\":{\"Type\":\"Fail\",\"Error\":\"Check Logs\",\"Cause\":\"Acl Remediation Failed\"},\"Notify InfoSecOps\":{\"Next\":\"Acl Remediation Failed\",\"Parameters\":{\"TopicArn\":\"",
+              {
+                "Ref": "infoSecOpsTopicIdD21C4FE1"
+              },
+              "\",\"Message.$\":\"$.sns_message\",\"Subject\":\"Object Acl Remediation\"},\"Type\":\"Task\",\"Resource\":\"arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":states:::sns:publish\"},\"Object Remediation Complete?\":{\"Type\":\"Choice\",\"Choices\":[{\"Variable\":\"$.status\",\"BooleanEquals\":true,\"Next\":\"Object Acl Compliant\"},{\"Variable\":\"$.status\",\"BooleanEquals\":false,\"Next\":\"Notify InfoSecOps\"}],\"Default\":\"Acl Remediation Failed\"},\"RemediateObjectAcl\":{\"Next\":\"Object Remediation Complete?\",\"OutputPath\":\"$\",\"Type\":\"Task\",\"Resource\":\"",
+              {
+                "Fn::GetAtt": [
+                  "remediateObjAclFn81CEDECA",
+                  "Arn"
+                ]
+              },
+              "\",\"ResultPath\":\"$\"},\"Object Acl Compliant\":{\"Type\":\"Succeed\",\"Comment\":\"Object Acl is Compliant\"}},\"TimeoutSeconds\":180}"
+            ]
+          ]
+        },
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "stateMachineIdRole62656937",
+            "Arn"
+          ]
+        },
+        "Tags": [
+          {
+            "Key": "Owner",
+            "Value": "Mystique"
+          },
+          {
+            "Key": "OwnerProfile",
+            "Value": "https://github.com/miztiik"
+          },
+          {
+            "Key": "ToKnowMore",
+            "Value": "https://youtube.com/c/valaxytechnologies"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "security-automation-remediate-unintended-s3-object-acl/stateMachineId/Resource"
+      }
+    },
+    "stateMachineIdEventsRoleF8F21970": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "events.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "Tags": [
+          {
+            "Key": "Owner",
+            "Value": "Mystique"
+          },
+          {
+            "Key": "OwnerProfile",
+            "Value": "https://github.com/miztiik"
+          },
+          {
+            "Key": "ToKnowMore",
+            "Value": "https://youtube.com/c/valaxytechnologies"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "security-automation-remediate-unintended-s3-object-acl/stateMachineId/EventsRole/Resource"
+      }
+    },
+    "stateMachineIdEventsRoleDefaultPolicy3AEB44AC": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "states:StartExecution",
+              "Effect": "Allow",
+              "Resource": {
+                "Ref": "stateMachineIdF7FDD688"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "stateMachineIdEventsRoleDefaultPolicy3AEB44AC",
+        "Roles": [
+          {
+            "Ref": "stateMachineIdEventsRoleF8F21970"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "security-automation-remediate-unintended-s3-object-acl/stateMachineId/EventsRole/DefaultPolicy/Resource"
+      }
+    },
+    "putObjectAclEventId3215BB4A": {
+      "Type": "AWS::Events::Rule",
+      "Properties": {
+        "Description": "Trigger an event for S3 PutObjectAcl or PutObject",
+        "EventPattern": {
+          "detail": {
+            "eventSource": [
+              "s3.amazonaws.com"
+            ],
+            "eventName": [
+              "PutObjectAcl",
+              "PutObject"
+            ],
+            "requestParameters": {
+              "bucketName": [
+                {
+                  "Ref": "s3bucketFBFA637E"
+                }
+              ]
+            }
+          },
+          "detail-type": [
+            "AWS API Call via CloudTrail"
+          ],
+          "source": [
+            "aws.s3"
+          ]
+        },
+        "Name": "put_s3_policy_event_MystiqueInfoSecurity",
+        "State": "ENABLED",
+        "Targets": [
+          {
+            "Arn": {
+              "Ref": "stateMachineIdF7FDD688"
+            },
+            "Id": "Target0",
+            "RoleArn": {
+              "Fn::GetAtt": [
+                "stateMachineIdEventsRoleF8F21970",
+                "Arn"
+              ]
+            }
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "security-automation-remediate-unintended-s3-object-acl/putObjectAclEventId/Resource"
+      }
+    }
+  },
+  "Outputs": {
+    "SecuirtyAutomationFrom": {
+      "Description": "To know more about this automation stack, check out our github page.",
+      "Value": "https://github.com/miztiik/security-automation-remediate_unintended_s3_object_acl"
+    },
+    "MonitoredS3Bucket": {
+      "Description": "S3 Bucket for testing purposes",
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://console.aws.amazon.com/s3/buckets/",
+            {
+              "Ref": "s3bucketFBFA637E"
+            }
+          ]
+        ]
+      }
+    },
+    "Helpercommands": {
+      "Description": "Commands to set object to public, Update OBJECT-KEY-NAME to your needs",
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "aws s3api get-object-acl  --bucket $",
+            {
+              "Ref": "s3bucketFBFA637E"
+            },
+            " --key OBJECT-KEY-NAME"
+          ]
+        ]
+      }
+    }
+  }
+}

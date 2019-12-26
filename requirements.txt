@@ -1,0 +1,9 @@
+-e .
+aws-cdk.core
+aws-cdk.aws-lambda
+aws-cdk.aws_s3
+aws_cdk.aws_events
+aws_cdk.aws_events_targets
+aws_cdk.aws_cloudtrail
+aws-cdk.aws_stepfunctions
+aws-cdk.aws_stepfunctions_tasks

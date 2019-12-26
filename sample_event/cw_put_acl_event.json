@@ -1,0 +1,94 @@
+{
+  "version": "0",
+  "id": "f4e2837-1210-9362-af9c-c0b6b660e1a5",
+  "detail-type": "AWS API Call via CloudTrail",
+  "source": "aws.s3",
+  "account": "100513032818",
+  "time": "2019-12-26T01:29:37Z",
+  "region": "us-east-1",
+  "resources": [],
+  "detail": {
+    "eventVersion": "1.05",
+    "userIdentity": {
+      "type": "IAMUser",
+      "principalId": "AIDAUR7KWXJLWZZ56LRA",
+      "arn": "arn:aws:iam::100513032818:user/for-you",
+      "accountId": "100513032818",
+      "accessKeyId": "ASIAUR7KWXJPJVIECFL",
+      "userName": "for-you",
+      "sessionContext": {
+        "attributes": {
+          "creationDate": "2019-12-25T21:25:09Z",
+          "mfaAuthenticated": "False"
+        }
+      },
+      "invokedBy": "signin.amazonaws.com"
+    },
+    "eventTime": "2019-12-26T01:29:37Z",
+    "eventSource": "s3.amazonaws.com",
+    "eventName": "PutObjectAcl",
+    "awsRegion": "us-east-1",
+    "sourceIPAddress": "85.144.205.34",
+    "userAgent": "signin.amazonaws.com",
+    "requestParameters": {
+      "bucketName": "security-automation-remediate-un-s3bucketfbfa637e-o0bx1ph2nipu",
+      "Host": "s3.amazonaws.com",
+      "AccessControlPolicy": {
+        "AccessControlList": {
+          "Grant": [
+            {
+              "Grantee": {
+                "xsi:type": "CanonicalUser",
+                "DisplayName": "traine02",
+                "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+                "ID": "55adfdfabd57a7d12bc47f3007452d43710f4ded687e6a7f6aef1f154"
+              },
+              "Permission": "FULL_CONTROL"
+            },
+            {
+              "Grantee": {
+                "xsi:type": "Group",
+                "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+                "URI": "http://acs.amazonaws.com/groups/global/AllUsers"
+              },
+              "Permission": "READ"
+            }
+          ]
+        },
+        "xmlns": "http://s3.amazonaws.com/doc/2006-03-01/",
+        "Owner": {
+          "DisplayName": "traine02",
+          "ID": "55adfdfabd57a7d12bc47f309f2f57e07452d43710f4ded687e6a7f6aef1f154"
+        }
+      },
+      "acl": "",
+      "key": "confidential.html"
+    },
+    "responseElements": "None",
+    "additionalEventData": {
+      "SignatureVersion": "SigV4",
+      "CipherSuite": "ECDHE-RSA-AES128-SHA",
+      "bytesTransferredIn": 721,
+      "AuthenticationMethod": "AuthHeader",
+      "x-amz-id-2": "+3wAFKJA7yONr0pIr6QgrnBYansDLj+N/JYxhbmlVFLNNpQbJC/XJtwyqc4qNpS2XQGuHqqSkQU=",
+      "bytesTransferredOut": 0
+    },
+    "requestID": "5FEE5594467149D3",
+    "eventID": "c581bcc0-509b-40ec-81fa-7ad0940a5aac",
+    "readOnly": "False",
+    "resources": [
+      {
+        "type": "AWS::S3::Object",
+        "ARN": "arn:aws:s3:::security-automation-remediate-un-s3bucketfbfa637e-o0bx1ph2nipu/confidential.html"
+      },
+      {
+        "accountId": "100513032818",
+        "type": "AWS::S3::Bucket",
+        "ARN": "arn:aws:s3:::security-automation-remediate-un-s3bucketfbfa637e-o0bx1ph2nipu"
+      }
+    ],
+    "eventType": "AwsApiCall",
+    "recipientAccountId": "100513032818",
+    "vpcEndpointId": "vpce-f40dc59"
+  }
+}
