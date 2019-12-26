@@ -36,7 +36,7 @@ That is exactly what we are going to do right now using, `AWS CloudTrail`, `AWS 
         - If `NON COMPLIANT` trigger remediation
         - If remediation fails, notify InfoSecOps
     - **EventBridge Rule**: Receives `PutObjectAcl` or `PutObject` events & triggers stepfuction
-    - All the necessary IAM Role with restrictive permissions
+    - **IAM Roles**: For lambda and step functions with restrictive permissions
 
     _**Note**: Sample commands to modify acl to test the solution can be found in the output section of the cloudformation template_
 
@@ -49,7 +49,7 @@ That is exactly what we are going to do right now using, `AWS CloudTrail`, `AWS 
       If you have AWS CDK installed you can close this repository and deploy the stack with,
 
         ```sh
-        # If you have cdk installed
+        # If you DONT have cdk installed
         npm install -g aws-cdk
 
         git clone https://github.com/miztiik/security-automation-remediate-unintended-s3-object-acl.git
