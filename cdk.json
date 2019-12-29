@@ -6,8 +6,8 @@
     "youtube_profile": "https://youtube.com/c/valaxytechnologies",
     "service_name": "remediate_unintended_iam_access",
     "env": {
-      "dev": {
-        "env_name": "dev"
+      "production": {
+        "env_name": "production"
       }
     }
   }
