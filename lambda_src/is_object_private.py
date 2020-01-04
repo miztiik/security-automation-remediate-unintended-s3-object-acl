@@ -59,9 +59,12 @@ def is_obj_private(bucket_name, obj_key):
 
         # If canonical owner & grantee ids do no match, conclude object is NOT private
         owner_id = obj_acl['Owner']['ID']
-        grantee_id = obj_acl['Grants'][0]['Grantee'].get('ID')
-        if (owner_id != grantee_id):
-            resp['is_private'] = False
+        # loop grants
+        for gr in obj_acl['Grants']:
+            grantee_id = gr['Grantee'].get('ID')
+            if (owner_id != grantee_id):
+                resp['is_private'] = False
+                break
         resp['status'] = True
     except ClientError as e:
         logger.error("Unable to get object:{obj_key} ACL")
