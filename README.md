@@ -55,6 +55,7 @@ That is exactly what we are going to do right now using, `AWS CloudTrail`, `AWS 
         git clone https://github.com/miztiik/security-automation-remediate-unintended-s3-object-acl.git
         cd security-automation-remediate-unintended-s3-object-acl
         source .env/bin/activate
+        pip install -r requirements.txt
         ```
 
       The very first time you deploy an AWS CDK app into an environment _(account/region)_, you’ll need to install a `bootstrap stack`, Otherwise just go ahead and deploy using `cdk deploy`
